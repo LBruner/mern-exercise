@@ -6,6 +6,7 @@ require('dotenv').config();
 
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({extended: true}));
 
 
 // mongoose.connect(process.env.ATLAS_URI)
@@ -16,7 +17,7 @@ mongoose.connect('mongodb://localhost:27017/mern-test')
 const exerciseRouter = require('./routes/exercisesRoutes');
 const usersRouter = require('./routes/userRoutes');
 
-// app.use('/exercises', exerciseRouter);
+app.use('/exercises', exerciseRouter);
 app.use('/users', usersRouter);
 
 app.get('*', (req, res) => {
