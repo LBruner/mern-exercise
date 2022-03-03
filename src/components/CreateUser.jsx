@@ -1,4 +1,5 @@
 import {useState} from "react";
+import axios from 'axios';
 
 const CreateUser = () => {
     const [username, setUsername] = useState('')
@@ -7,10 +8,11 @@ const CreateUser = () => {
         setUsername(e.target.value);
     }
 
-    const onSubmitHandler = (e) => {
+    const onSubmitHandler = async(e) => {
         e.preventDefault()
 
         setUsername('');
+        const data = await axios.post('http://localhost:3000/users/add', {username: username})
     }
 
     return (

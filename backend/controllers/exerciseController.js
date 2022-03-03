@@ -13,8 +13,8 @@ module.exports.renderExercise = async(req, res) =>{
 }
 
 module.exports.addExercise = catchAsync(async(req,res) =>{
-        const { username, description, duration} = req.body;
-        const date = Date.parse(req.body.date);
+        const { username, description, duration} = req.body.exerciseInfo;
+        const date = Date.parse(req.body.exerciseInfo.date);
 
         const newExercise = new Exercise({
             username, description, duration, date
@@ -25,8 +25,9 @@ module.exports.addExercise = catchAsync(async(req,res) =>{
 })
 
 module.exports.editExercise = catchAsync(async (req,res) =>{
+    console.log(req.body)
     const {id} = req.params;
-    await Exercise.findByIdAndUpdate(id, req.body.exercise);
+    await Exercise.findByIdAndUpdate(id, req.body.exerciseInfo);
     res.redirect(`/exercises/${id}`)
 })
 

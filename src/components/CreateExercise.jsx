@@ -1,10 +1,10 @@
 import {useEffect, useRef, useState} from "react";
 import DatePicker from 'react-date-picker'
 import 'react-date-picker/dist/DatePicker.css'
+import axios from 'axios';
 
 
 const CreateExercise = () => {
-
     const [exerciseInfo, setExerciseInfo] = useState({
         username: '',
         description: '',
@@ -17,6 +17,7 @@ const CreateExercise = () => {
 
     const changeUsernameHandler = (e) => {
         setExerciseInfo((prevState => ({...prevState, username: e.target.value})))
+        console.log(exerciseInfo)
     }
     const changeDescriptionHandler = (e) => {
         setExerciseInfo((prevState => ({...prevState, description: e.target.value})))
@@ -25,25 +26,34 @@ const CreateExercise = () => {
         setExerciseInfo((prevState => ({...prevState, duration: e.target.value})))
     }
     const changeDateHandler = (date) => {
-        console.log(exerciseInfo)
         setExerciseInfo((prevState => {
             return {...prevState, date: date}
         }))
     }
 
-    const onSubmitHandler = (e) => {
-        console.log(exerciseInfo)
+    const onSubmitHandler = async (e) => {
         e.preventDefault()
+        const data = await axios.post('http://localhost:3000/exercises/add', {exerciseInfo})
+        console.log(exerciseInfo)
         window.location = '/';
     }
 
     useEffect(() => {
-        console.log('OI')
-        setExerciseInfo((prevState => {
-            return {...prevState, users: ['test user'], username: 'test users'}
-        }))
+        async function setUsers() {
+            const userData = await axios.get('http://localhost:3000/users');
+            setExerciseInfo((prevState => {
+                return {
+                    ...prevState,
+                    users: userData.data.map((user => user.username)),
+                    username: userData.data[0].username
+                }
+            }))
+        }
 
-    }, [exerciseInfo.description, exerciseInfo.date, exerciseInfo.duration])
+        setUsers()
+
+    }, [])
+
 
     return (
         <div>
